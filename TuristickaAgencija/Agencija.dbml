@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Agencija" Class="AgencijaDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=Nebojsa\Lazovic;Initial Catalog=Agencija;Integrated Security=True" SettingsObjectName="TuristickaAgencija.Properties.Settings" SettingsPropertyName="AgencijaConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Hotel" Member="Hotels">
+    <Type Name="Hotel">
+      <Column Name="IDHotela" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="nazivHotela" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="kategorija" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="brSoba" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IDMesta" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Hotel_Rezervacija" Member="Rezervacijas" ThisKey="IDHotela" OtherKey="IDHotela" Type="Rezervacija" />
+      <Association Name="Hotel_Soba" Member="Sobas" ThisKey="IDHotela" OtherKey="IDHotela" Type="Soba" />
+      <Association Name="Mesto_Hotel" Member="Mesto" ThisKey="IDMesta" OtherKey="IDMesta" Type="Mesto" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.StavkaRacuna" Member="StavkaRacunas">
+    <Type Name="StavkaRacuna">
+      <Column Name="IDStavke" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="nazivStavke" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="StavkaRacuna_Racun" Member="Racuns" ThisKey="IDStavke" OtherKey="IDStavke" Type="Racun" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Mesto" Member="Mestos">
+    <Type Name="Mesto">
+      <Column Name="IDMesta" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="nazivMesta" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="drzava" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="region" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Mesto_Hotel" Member="Hotels" ThisKey="IDMesta" OtherKey="IDMesta" Type="Hotel" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Putnik" Member="Putniks">
+    <Type Name="Putnik">
+      <Column Name="IDPutnika" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ime" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="prezime" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="adresa" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="telefon" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="brojKartice" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Putnik_Racun" Member="Racuns" ThisKey="IDPutnika" OtherKey="IDPutnika" Type="Racun" />
+      <Association Name="Putnik_Rezervacija" Member="Rezervacijas" ThisKey="IDPutnika" OtherKey="IDPutnika" Type="Rezervacija" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Racun" Member="Racuns">
+    <Type Name="Racun">
+      <Column Name="IDRacuna" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="datum" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="iznos" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="storniran" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IDStavke" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IDSobe" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IDPutnika" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Putnik_Racun" Member="Putnik" ThisKey="IDPutnika" OtherKey="IDPutnika" Type="Putnik" IsForeignKey="true" />
+      <Association Name="StavkaRacuna_Racun" Member="StavkaRacuna" ThisKey="IDStavke" OtherKey="IDStavke" Type="StavkaRacuna" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Rezervacija" Member="Rezervacijas">
+    <Type Name="Rezervacija">
+      <Column Name="IDRezervacije" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="datumRezervacije" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="datumOd" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="datumDo" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="otkazana" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IDPutnika" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IDHotela" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Hotel_Rezervacija" Member="Hotel" ThisKey="IDHotela" OtherKey="IDHotela" Type="Hotel" IsForeignKey="true" />
+      <Association Name="Putnik_Rezervacija" Member="Putnik" ThisKey="IDPutnika" OtherKey="IDPutnika" Type="Putnik" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Soba" Member="Sobas">
+    <Type Name="Soba">
+      <Column Name="IDSobe" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="tipSobe" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="brKreveta" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="slobodna" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="cena" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="IDHotela" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Hotel_Soba" Member="Hotel" ThisKey="IDHotela" OtherKey="IDHotela" Type="Hotel" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
